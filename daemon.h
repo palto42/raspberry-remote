@@ -3,6 +3,7 @@
 char nGroup[6];
 int nSys;
 int nSwitchNumber;
+char nSwitch[6]
 int nAction;
 int nPlugs;
 int nTimeout;

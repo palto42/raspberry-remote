@@ -44,7 +44,7 @@
 #include <netinet/in.h>
 
 #include "daemon.h"
-#include "RCSwitch.h"
+#include "./rc-switch/RCSwitch.h"
 
 RCSwitch mySwitch;
 
@@ -124,11 +124,14 @@ int main(int argc, char* argv[]) {
 					nGroup[5] = '\0';
 					nSwitchNumber = (buffer[6]-48)*10;
 					nSwitchNumber += (buffer[7]-48);
+// ###############################################################################
+					// need to convert nSwitchNumber to binary string
+					getBin(nSwitchNumber,nSwitch);
 					nAction = buffer[8]-48;
 					nTimeout=0;
 					printf("nSys: %i\n", nSys);
 					printf("nGroup: %s\n", nGroup);
-					printf("nSwitchNumber: %i\n", nSwitchNumber);
+					printf("nSwitchNumber: %s\n", nSwitch);
 					printf("nAction: %i\n", nAction);
 
 					if (strlen(buffer) >= 10) nTimeout = buffer[9]-48;
@@ -151,7 +154,7 @@ int main(int argc, char* argv[]) {
 							//OFF
 							case 0:{
 								//piThreadCreate(switchOff);
-								mySwitch.switchOffBinary(nGroup, nSwitchNumber);
+								mySwitch.switchOff(nGroup, nSwitch);
 								nState[nAddr] = 0;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
 								sprintf(msg, "%d", nState[nAddr]);
@@ -161,7 +164,7 @@ int main(int argc, char* argv[]) {
 							//ON
 							case 1:{
 								//piThreadCreate(switchOn);
-								mySwitch.switchOnBinary(nGroup, nSwitchNumber);
+								mySwitch.switchOn(nGroup, nSwitchNumber);
 								nState[nAddr] = 1;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
 								sprintf(msg, "%d", nState[nAddr]);
@@ -187,11 +190,12 @@ int main(int argc, char* argv[]) {
 					nGroup[2] = '\0';
 					nSwitchNumber = (buffer[3]-48)*10;
 					nSwitchNumber += (buffer[4]-48);
+					getBin(nSwitchNumber,nSwitch);
 					nAction = buffer[5]-48;
 					nTimeout=0;
 					printf("nSys: %i\n", nSys);
 					printf("nGroup: %s\n", nGroup);
-					printf("nSwitchNumber: %i\n", nSwitchNumber);
+					printf("nSwitchNumber: %s\n", nSwitch);
 					printf("nAction: %i\n", nAction);
 					int nAddr = getAddrInt(nGroup, nSwitchNumber);
 					printf("nAddr: %i\n", nAddr);
@@ -411,6 +415,22 @@ int getAddrInt(const char* nGroup, int nSwitchNumber) {
  */
 int getAddrInt(const char* nGroup, int nSwitchNumber) {
 	return ((atoi(nGroup) - 1) * 16) + (nSwitchNumber - 1) + 1024; /// change for ZAP
+}
+
+/**
+ * convert int to 5 bit binary (string)
+ * https://stackoverflow.com/questions/7911651/decimal-to-binary
+ * modified as function which returns string
+ *   char* getBin(int num)
+ * void getBin(int num, char *str)
+ */
+void getBin(int num, char *str)
+{
+  //char *str
+  *(str+5) = '\0';
+  int mask = 0x10 << 1;
+  while(mask >>= 1)
+    *str++ = !!(mask & num) + '0';
 }
 
 PI_THREAD(switchOn) {
