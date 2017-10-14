@@ -191,7 +191,7 @@ int main(int argc, char *argv[]) {
             } else if (decimalMode) {
 				mySwitch.setPulseLength(atoi(unitCode));
 				mySwitch.setProtocol(command);
-				mySwitch.send (systemCode,24);
+				mySwitch.send (atoi(systemCode),24);
 			} else {
                 switch (command) {
                     case 1:
