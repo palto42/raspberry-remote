@@ -14,4 +14,4 @@ send: ./rc-switch/RCSwitch.o send.o
 	$(CXX) $+ -o $@ $(CXXFLAGS) $(LDFLAGS)
 
 clean:
-	rm -f *.o send daemon
+	$(RM) ./rc-switch/*.o *.o send daemon

@@ -23,6 +23,11 @@ void printUsage() {
     printf("   This means that your sockets need to be setup in this manner, which often\n");
     printf("   includes that the dedicated remote is rendered useless, but more than\n");
     printf("   6 sockets are supported.\n\n");
+    printf(" -d, --decimal:\n");
+    printf("   Switches the instance to decimal mode.\n");
+    printf("   The <system code> is the decimal value to send");
+    printf("   The <unit code> is the required pulse length");
+    printf("   The <command> option specifies the protocol (e.g. 1)");
     printf(" -h, --help:\n");
     printf("   displays this help\n\n");
     printf(" -p X, --pin=X\n");
@@ -45,6 +50,7 @@ void printUsage() {
 int main(int argc, char *argv[]) {
     bool silentMode = false;
     bool binaryMode = false;
+    bool decimalMode = false;
     bool userMode = false;
     int pin = 0;
     int controlArgCount = 0;
@@ -58,6 +64,7 @@ int main(int argc, char *argv[]) {
         static struct option long_options[] =
             {
               {"binary", no_argument, 0, 'b'},
+              {"decimal", no_argument, 0, 'd'}, // new decimal mode
               {"help", no_argument, 0, 'h'},
               {"pin", required_argument, 0, 'p'},
               {"silent", no_argument, 0, 's'},
@@ -74,6 +81,9 @@ int main(int argc, char *argv[]) {
         switch (c) {
             case 'b':
                 binaryMode = true;
+                break;
+            case 'd':
+                decimalMode = true;
                 break;
             case 'p':
                 pin = atoi(optarg);
@@ -178,7 +188,11 @@ int main(int argc, char *argv[]) {
                             return -1;
                         }
                 }
-            } else {
+            } else if (decimalMode) {
+				mySwitch.setPulseLength(unitCode);
+				mySwitch.setProtocol(command);
+				mySwitch.send (systemCode,24);
+			} else {
                 switch (command) {
                     case 1:
                         mySwitch.switchOn(systemCode, atoi(unitCode));

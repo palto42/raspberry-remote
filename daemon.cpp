@@ -291,7 +291,13 @@ int main(int argc, char* argv[]) {
 					}
 					break;
 				}
-				// Zap / REV (currently copy of Elro)
+/**
+ * (copied from copy of Elro, needs adjustment)
+ * 
+ * ZAP-Code   Group   (F=open)  | Switch 5..1       | On=01 Off=10          
+ * tri-state  0   0   F   F   F | 1   F   F   0   0 | 1   0
+ * binary     00  00  01  01  01| 11  01  01  00  00| 00  11 
+ */
 				case 3:{
 					for (int i=1; i<6; i++) {
 						nGroup[i-1] = buffer[i];
@@ -313,20 +319,24 @@ int main(int argc, char* argv[]) {
 					/**
 					* handle messages
 					*/
-					int nAddr = getAddrElro(nGroup, nSwitchNumber);
+					int nAddr = getDecimalZap(nGroup, nSwitchNumber, nAction);
 					printf("nAddr: %i\n", nAddr);
 					printf("nPlugs: %i\n", nPlugs);
 					char msg[13];
-					if (nAddr > 1023 || nAddr < 0) {
+					if (nAddr > 5600524 || nAddr < 5424) {
 						printf("Switch out of range: %s:%d\n", nGroup, nSwitchNumber);
 						n = write(newsockfd,"2",1);
 					}
 					else {
-						switch (nAction) {
+						mySwitch.setPulseLength(188);
+						mySwitch.setProtocol(1);
+						mySwitch.send (nAddr,24);
 							//OFF
 							case 0:{
 								//piThreadCreate(switchOff);
-								mySwitch.switchOff(nGroup, nSwitch);
+								mySwitch.setPulseLength(188);
+								mySwitch.setProtocol(1);
+								mySwitch.send (nAddr,24);
 								nState[nAddr] = 0;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
 								sprintf(msg, "%d", nState[nAddr]);
@@ -336,7 +346,9 @@ int main(int argc, char* argv[]) {
 							//ON
 							case 1:{
 								//piThreadCreate(switchOn);
-								mySwitch.switchOn(nGroup, nSwitch);
+								mySwitch.setPulseLength(188);
+								mySwitch.setProtocol(1);
+								mySwitch.send (nAddr,24);
 								nState[nAddr] = 1;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
 								sprintf(msg, "%d", nState[nAddr]);
@@ -412,9 +424,36 @@ int getAddrInt(const char* nGroup, int nSwitchNumber) {
 
 /**
  * calculate the array address of the power state for Zap/REV
+ * 
+ * ZAP-Code   Group   (F=open)  | Switch 5..1       | On=01 Off=10  
+ *                                5   4   3   2   1        
+ * tri-state  0   0   F   F   F | 1   F   F   0   0 | 1   0
+ * binary     00  00  01  01  01| 11  01  01  00  00| 00  11 
+ * 
+ * minimum address = 000000000001010100110000 = 5424
+ * maximum address = 010101010111010100001100 = 5600524
  */
-int getAddrZap(const char* nGroup, int nSwitchNumber) {
-	return ((atoi(nGroup) - 1) * 16) + (nSwitchNumber - 1) + 1024; /// change for ZAP
+int getDecimalZap(const char* nGroup, int nSwitchNumber, int nAction) {
+	int group = 0;
+	for (int i = 0; i < 5; i++) {
+		if (nGroup[i] == "0") {
+			group <<= 2;
+		}
+		else if nGroup[i] == "1") {
+			group = group << 2 | 1;
+		}
+		else { // "F" or any other character
+			group = group << 2 | 3;
+		}
+		int switchnr = 0b11 << 2*(nSwitchNumber+1) || 0b01010100000000;
+		int result = (group << 7) | nSwitchNumber;
+		if (nAction = 0) { //OFF
+			result = result |  0b1100;
+		}
+		else if (nAction = 1) { //ON
+			result = result |  0b0011;
+		}
+	return result;
 }
 
 /**
