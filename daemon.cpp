@@ -326,7 +326,7 @@ int main(int argc, char* argv[]) {
 							//OFF
 							case 0:{
 								//piThreadCreate(switchOff);
-								mySwitch.switchOffBinary(nGroup, nSwitchNumber);
+								mySwitch.switchOff(nGroup, nSwitch);
 								nState[nAddr] = 0;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
 								sprintf(msg, "%d", nState[nAddr]);
@@ -336,7 +336,7 @@ int main(int argc, char* argv[]) {
 							//ON
 							case 1:{
 								//piThreadCreate(switchOn);
-								mySwitch.switchOnBinary(nGroup, nSwitchNumber);
+								mySwitch.switchOn(nGroup, nSwitch);
 								nState[nAddr] = 1;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
 								sprintf(msg, "%d", nState[nAddr]);
@@ -436,21 +436,21 @@ void getBin(int num, char *str)
 PI_THREAD(switchOn) {
 	printf("switchOnThread: %d\n", nTimeout);
 	char tGroup[6];
-	int tSwitchNumber;
+	char tSwitchNumber[6];
 	memcpy(tGroup, nGroup, sizeof(tGroup));
-	tSwitchNumber = nSwitchNumber;
+	getBin(nSwitchNumber,tSwitchNumber);
 	sleep(nTimeout*60);
-	mySwitch.switchOnBinary(tGroup, tSwitchNumber);
+	mySwitch.switchOn(tGroup, tSwitchNumber);
 	return 0;
 }
 
 PI_THREAD(switchOff) {
 	printf("switchOffThread: %d\n", nTimeout);
 	char tGroup[6];
-	int tSwitchNumber;
+	char tSwitchNumber[6];
 	memcpy(tGroup, nGroup, sizeof(tGroup));
-	tSwitchNumber = nSwitchNumber;
+	getBin(nSwitchNumber,tSwitchNumber);
 	sleep(nTimeout*60);
-	mySwitch.switchOffBinary(tGroup, tSwitchNumber);
+	mySwitch.switchOff(tGroup, tSwitchNumber);
 	return 0;
 }

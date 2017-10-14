@@ -3,14 +3,14 @@
 char nGroup[6];
 int nSys;
 int nSwitchNumber;
-char nSwitch[6]
+char nSwitch[6];
 int nAction;
 int nPlugs;
 int nTimeout;
 int PORT = 11337;
 
 void error(const char *msg);
-void getBin(int num, char *str)
+void getBin(int num, char *str);
 int getAddrElro(const char* nGroup, int nSwitchNumber);
 int getAddrInt(const char* nGroup, int nSwitchNumber);
 // add code for Zap/REV switches
