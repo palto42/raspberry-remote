@@ -7,10 +7,10 @@ CXXFLAGS += -lwiringPi
 
 default: daemon
 
-daemon: RCSwitch.o daemon.o
+daemon: ./rc-switch/RCSwitch.o daemon.o
 	$(CXX) -Wall -pthread $+ -o $@ $(CXXFLAGS) $(LDFLAGS)
 
-send: RCSwitch.o send.o
+send: ./rc-switch/RCSwitch.o send.o
 	$(CXX) $+ -o $@ $(CXXFLAGS) $(LDFLAGS)
 
 clean:
