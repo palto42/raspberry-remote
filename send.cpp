@@ -189,7 +189,7 @@ int main(int argc, char *argv[]) {
                         }
                 }
             } else if (decimalMode) {
-				mySwitch.setPulseLength(unitCode);
+				mySwitch.setPulseLength(atoi(unitCode));
 				mySwitch.setProtocol(command);
 				mySwitch.send (systemCode,24);
 			} else {
