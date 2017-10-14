@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
             };
         int option_index = 0;
 
-        c = getopt_long (argc, argv, "bhp:su",long_options, &option_index);
+        c = getopt_long (argc, argv, "bdhp:su",long_options, &option_index);
         /* Detect the end of the options. */
         if (c == -1)
             break;
