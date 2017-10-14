@@ -10,6 +10,7 @@ int nTimeout;
 int PORT = 11337;
 
 void error(const char *msg);
+void getBin(int num, char *str)
 int getAddrElro(const char* nGroup, int nSwitchNumber);
 int getAddrInt(const char* nGroup, int nSwitchNumber);
 // add code for Zap/REV switches
