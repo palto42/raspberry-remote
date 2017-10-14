@@ -413,7 +413,7 @@ int getAddrInt(const char* nGroup, int nSwitchNumber) {
 /**
  * calculate the array address of the power state for Zap/REV
  */
-int getAddrInt(const char* nGroup, int nSwitchNumber) {
+int getAddrZap(const char* nGroup, int nSwitchNumber) {
 	return ((atoi(nGroup) - 1) * 16) + (nSwitchNumber - 1) + 1024; /// change for ZAP
 }
 
