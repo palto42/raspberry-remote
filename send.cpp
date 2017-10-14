@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
             unitCode = controlArgs[indexUnitCode];
 
             if (!silentMode) {
-                printf("sending systemCode[%s] unitCode[%i] command[%i]\n", systemCode, unitCode, command);
+                printf("sending systemCode[%s] unitCode[%s] command[%i]\n", systemCode, unitCode, command);
             }
             if (binaryMode) {
                 switch (command) {
