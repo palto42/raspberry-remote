@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     int pin = 0;
     int controlArgCount = 0;
     char *systemCode;
-    int unitCode;
+    char *unitCode;
     int command;
     bool multiMode;
 
@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
             int indexSystemCode = i * 2;
             int indexUnitCode = indexSystemCode + 1;
             systemCode = controlArgs[indexSystemCode];
-            unitCode = atoi(controlArgs[indexUnitCode]);
+            unitCode = controlArgs[indexUnitCode];
 
             if (!silentMode) {
                 printf("sending systemCode[%s] unitCode[%i] command[%i]\n", systemCode, unitCode, command);
@@ -159,10 +159,17 @@ int main(int argc, char *argv[]) {
             if (binaryMode) {
                 switch (command) {
                     case 1:
-                        mySwitch.switchOnBinary(systemCode, unitCode);
+/**
+ * Change back to original library "rc-switch" with 
+ *   void switchOn(const char* sGroup, const char* sDevice); 
+ *
+ * @param sGroup        Code of the switch group (refers to DIP switches 1..5 where "1" = on and "0" = off, if all DIP switches are on it's "11111")
+ * @param sDevice       Code of the switch device (refers to DIP switches 6..10 (A..E) where "1" = on and "0" = off, if all DIP switches are on it's "11111")
+ */
+                        mySwitch.switchOn(systemCode, unitCode);
                         break;
                     case 0:
-                        mySwitch.switchOffBinary(systemCode, unitCode);
+                        mySwitch.switchOff(systemCode, unitCode);
                         break;
                     default:
                         printf("command[%i] is unsupported\n", command);
@@ -174,10 +181,10 @@ int main(int argc, char *argv[]) {
             } else {
                 switch (command) {
                     case 1:
-                        mySwitch.switchOn(systemCode, unitCode);
+                        mySwitch.switchOn(systemCode, atoi(unitCode));
                         break;
                     case 0:
-                        mySwitch.switchOff(systemCode, unitCode);
+                        mySwitch.switchOff(systemCode, atoi(unitCode));
                         break;
                     case 2:
                         // 00001 2 on binary coded
