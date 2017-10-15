@@ -324,22 +324,28 @@ int main(int argc, char* argv[]) {
 					/**
 					* handle messages
 					*/
-					int nAddr = getDecimalZap(nGroup, nSwitchNumber, nAction);
+					int nZapCode = getDecimalZap(nGroup, nSwitchNumber, nAction);
+// test fixed nAddr
+					int nAddr = 123;
 					printf("nAddr: %i\n", nAddr);
 					printf("nPlugs: %i\n", nPlugs);
-					char msg[20];
-					if (nAddr > 5600524 || nAddr < 5424) {
+					char msg[13];
+					if (nZapCode > 5600524 || nZapCode < 5424) {
 						printf("Switch out of range: %s:%d\n", nGroup, nSwitchNumber);
 						n = write(newsockfd,"2",1);
 					}
 					else {
 						mySwitch.setProtocol(1,188);
+						//switch Zap 5 on (for testing)
+						//mySwitch.send (357635,24);
+						//switch Zap 5 off (for testing)
+						//mySwitch.send (357644,24);
 						//mySwitch.send (nAddr,24);
 						switch (nAction) {
 							//OFF
 							case 0:{
 								//piThreadCreate(switchOff);
-								mySwitch.send (nAddr,24);
+								mySwitch.send (nZapCode,24);
 								nState[nAddr] = 0;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
 								sprintf(msg, "%d", nState[nAddr]);
@@ -349,7 +355,7 @@ int main(int argc, char* argv[]) {
 							//ON
 							case 1:{
 								//piThreadCreate(switchOn);
-								mySwitch.send (nAddr,24);
+								mySwitch.send (nZapCode,24);
 								nState[nAddr] = 1;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
 								sprintf(msg, "%d", nState[nAddr]);
