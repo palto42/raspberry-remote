@@ -328,14 +328,11 @@ int main(int argc, char* argv[]) {
 						n = write(newsockfd,"2",1);
 					}
 					else {
-						mySwitch.setPulseLength(188);
-						mySwitch.setProtocol(1);
+						mySwitch.setProtocol(1,188);
 						mySwitch.send (nAddr,24);
 							//OFF
 							case 0:{
 								//piThreadCreate(switchOff);
-								mySwitch.setPulseLength(188);
-								mySwitch.setProtocol(1);
 								mySwitch.send (nAddr,24);
 								nState[nAddr] = 0;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
@@ -346,8 +343,6 @@ int main(int argc, char* argv[]) {
 							//ON
 							case 1:{
 								//piThreadCreate(switchOn);
-								mySwitch.setPulseLength(188);
-								mySwitch.setProtocol(1);
 								mySwitch.send (nAddr,24);
 								nState[nAddr] = 1;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
