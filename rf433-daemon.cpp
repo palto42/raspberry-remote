@@ -153,6 +153,7 @@ int main(int argc, char* argv[]) {
 						n = write(newsockfd,"2",1);
 					}
 					else {
+						mySwitch.setProtocol(1,350);
 						switch (nAction) {
 							//OFF
 							case 0:{
@@ -176,8 +177,8 @@ int main(int argc, char* argv[]) {
 							}
 							//STATUS
 							case 2:{
-								sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
-								sprintf(msg, "%d", nState[nAddr]);
+								//sprintf(msg, "nState[%d] = %d\n", nAddr, nState[nAddr]);
+								sprintf(msg, "%d\n", nState[nAddr]);
 								n = write(newsockfd,msg,1);
 								break;
 							}
@@ -188,6 +189,7 @@ int main(int argc, char* argv[]) {
 
 				//Intertechno
 				case 2:{
+					mySwitch.setProtocol(1,300);
 					nGroup[0] = buffer[1];
 					nGroup[1] = buffer[2];
 					nGroup[2] = '\0';
@@ -325,8 +327,7 @@ int main(int argc, char* argv[]) {
 					int nAddr = getDecimalZap(nGroup, nSwitchNumber, nAction);
 					printf("nAddr: %i\n", nAddr);
 					printf("nPlugs: %i\n", nPlugs);
-                                        char msg[13];
-					//sprintf(msg, "Code: %i, Plug: %i", nAddr, nPlugs);
+					char msg[20];
 					if (nAddr > 5600524 || nAddr < 5424) {
 						printf("Switch out of range: %s:%d\n", nGroup, nSwitchNumber);
 						n = write(newsockfd,"2",1);
