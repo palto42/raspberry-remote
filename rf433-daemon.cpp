@@ -448,14 +448,15 @@ int getDecimalZap(const char* nGroup, int nSwitchNumber, int nAction) {
 		}
 	}
 	//int switchnr = 0b11 << (2*(nSwitchNumber+1)) | 0b01010100000000;
+	int switchnr = 0b11 << (2*(nSwitchNumber+1));
 	if (nAction == 0) { //OFF
-		int switchnr = 0b01010100001100;
+		switchnr |= 0b01010100001100;
 	}
 	else if (nAction == 1) { //ON
-		int switchnr = 0b01010100000011;
+		switchnr |= 0b01010100000011;
 	}
-	switchnr |= 0b11 << (2*(nSwitchNumber+1));
-	((int result = (group << 14) | switchnr;
+	//switchnr |= 0b11 << (2*(nSwitchNumber+1));
+	//int result = (group << 14) | switchnr;
 	return (group << 14) | switchnr;
 }
 
