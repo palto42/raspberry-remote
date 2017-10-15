@@ -34,7 +34,7 @@
  *     echo 202021 | nc localhost 11337
  * 
  *   Switch Zap plug 5 on group 11000 to on
- *     echo 311000051 | nc localhost 11337
+ *     echo 300FFF051 | nc localhost 11337
  *
  */
 
@@ -321,20 +321,19 @@ int main(int argc, char* argv[]) {
 
 					/**
 					* handle messages
-					* /
+					*/
 					int nAddr = getDecimalZap(nGroup, nSwitchNumber, nAction);
 					printf("nAddr: %i\n", nAddr);
 					printf("nPlugs: %i\n", nPlugs);
-					*/
-					int nAddr = 357635; 
-					char msg[13];
+                                        char msg[13];
+					//sprintf(msg, "Code: %i, Plug: %i", nAddr, nPlugs);
 					if (nAddr > 5600524 || nAddr < 5424) {
 						printf("Switch out of range: %s:%d\n", nGroup, nSwitchNumber);
 						n = write(newsockfd,"2",1);
 					}
 					else {
 						mySwitch.setProtocol(1,188);
-						mySwitch.send (nAddr,24);
+						//mySwitch.send (nAddr,24);
 						switch (nAction) {
 							//OFF
 							case 0:{
@@ -441,18 +440,19 @@ int getDecimalZap(const char* nGroup, int nSwitchNumber, int nAction) {
 			group <<= 2;
 		}
 		else if (nGroup[i] == '1') {
-			group = group << 2 | 1;
-		}
-		else { // "F" or any other character
 			group = group << 2 | 3;
 		}
+		else { // "F" or any other character
+			group = group << 2 | 1;
+		}
 	}
-	int switchnr = 0b11 << 2*(nSwitchNumber+1) || 0b01010100000000;
-	int result = (group << 7) | nSwitchNumber;
-	if (nAction = 0) { //OFF
+	int switchnr = 0b11 << (2*(nSwitchNumber+1)) | 0b01010100000000;
+//        printf("Group# %i, Switch# %i, Action %i\n", group, switchnr, nAction);
+	int result = (group << 14) | switchnr;
+	if (nAction == 0) { //OFF
 		result = result |  0b1100;
 	}
-	else if (nAction = 1) { //ON
+	else if (nAction == 1) { //ON
 		result = result |  0b0011;
 	}
 	return result;
