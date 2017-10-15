@@ -157,10 +157,10 @@ int main(int argc, char* argv[]) {
 							//OFF
 							case 0:{
 								//piThreadCreate(switchOff);
-								mySwitch.switchOff(nGroup, nSwitch);
+								mySwitch.switchOff(nGroup, nSwitchNumber);
 								nState[nAddr] = 0;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
-								sprintf(msg, "%d", nState[nAddr]);
+								sprintf(msg, "Off %d\n", nState[nAddr]);
 								n = write(newsockfd,msg,1);
 								break;
 							}
@@ -170,7 +170,7 @@ int main(int argc, char* argv[]) {
 								mySwitch.switchOn(nGroup, nSwitchNumber);
 								nState[nAddr] = 1;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
-								sprintf(msg, "%d", nState[nAddr]);
+								sprintf(msg, "On %d\n", nState[nAddr]);
 								n = write(newsockfd,msg,1);
 								break;
 							}
