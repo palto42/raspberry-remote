@@ -64,7 +64,8 @@ int main(int argc, char* argv[]) {
 	mySwitch.setPulseLength(300);
 	usleep(50000);
 	mySwitch.enableTransmit(0);
-	nPlugs=1280;
+	//nPlugs=1280;
+	nPlugs=3328; // increased for Zap switched to avoid ovelap with Elro
 	int nState[nPlugs];
 	nTimeout=0;
 	memset(nState, 0, sizeof(nState));
@@ -326,7 +327,7 @@ int main(int argc, char* argv[]) {
 					* handle messages
 					*/
 					int nZapCode = getDecimalZap(nGroup, nSwitchNumber, nAction);
-					int nAddr = getAddrElro(nGroup, nSwitchNumber); // use same switch address calculation as for Elro
+					int nAddr = getAddrElro(nGroup, nSwitchNumber)+2048; // use same switch address calculation as for Elro
 // test fixed nAddr
 //					int nAddr = 123;
 					printf("nAddr: %i\n", nAddr);
