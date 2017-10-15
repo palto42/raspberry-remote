@@ -299,7 +299,8 @@ int main(int argc, char* argv[]) {
 /**
  * (copied from copy of Elro, needs adjustment)
  * 
- * ZAP-Code   Group   (F=open)  | Switch 5..1       | On=01 Off=10          
+ * ZAP-Code   Group   (0=open)  | Switch 5..1 (ex.5)| On=01 Off=10    
+ * send code  1   1   0   0   0 | 1   0   0   0   0 |
  * tri-state  0   0   F   F   F | 1   F   F   0   0 | 1   0
  * binary     00  00  01  01  01| 11  01  01  00  00| 00  11 
  */
@@ -325,8 +326,9 @@ int main(int argc, char* argv[]) {
 					* handle messages
 					*/
 					int nZapCode = getDecimalZap(nGroup, nSwitchNumber, nAction);
+					int nAddr = getAddrElro(nGroup, nSwitchNumber); // use same switch address calculation as for Elro
 // test fixed nAddr
-					int nAddr = 123;
+//					int nAddr = 123;
 					printf("nAddr: %i\n", nAddr);
 					printf("nPlugs: %i\n", nPlugs);
 					char msg[13];
@@ -443,13 +445,10 @@ int getAddrInt(const char* nGroup, int nSwitchNumber) {
 int getDecimalZap(const char* nGroup, int nSwitchNumber, int nAction) {
 	int group = 0;
 	for (int i = 0; i < 5; i++) {
-		if (nGroup[i] == '0') {
+		if (nGroup[i] == '1') { // 1 = closed="tri-0"
 			group <<= 2;
 		}
-		else if (nGroup[i] == '1') {
-			group = group << 2 | 3;
-		}
-		else { // "F" or any other character
+		else { // 0 = open = "tri-F" 
 			group = group << 2 | 1;
 		}
 	}
