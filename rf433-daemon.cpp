@@ -298,8 +298,6 @@ int main(int argc, char* argv[]) {
 					break;
 				}
 /**
- * (copied from copy of Elro, needs adjustment)
- * 
  * ZAP-Code   Group   (0=open)  | Switch 5..1 (ex.5)| On=01 Off=10    
  * send code  1   1   0   0   0 | 1   0   0   0   0 |
  * tri-state  0   0   F   F   F | 1   F   F   0   0 | 1   0
@@ -348,7 +346,8 @@ int main(int argc, char* argv[]) {
 							//OFF
 							case 0:{
 								//piThreadCreate(switchOff);
-								mySwitch.send (nZapCode,24);
+								//mySwitch.send (nZapCode,24);
+								mySwitch.switchOnZap (nGroup,nSwitchNumber);
 								nState[nAddr] = 0;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
 								sprintf(msg, "%d", nState[nAddr]);
@@ -358,7 +357,8 @@ int main(int argc, char* argv[]) {
 							//ON
 							case 1:{
 								//piThreadCreate(switchOn);
-								mySwitch.send (nZapCode,24);
+								//mySwitch.send (nZapCode,24);
+								mySwitch.switchOffZap (nGroup,nSwitchNumber);
 								nState[nAddr] = 1;
 								//sprintf(msg, "nState[%d] = %d", nAddr, nState[nAddr]);
 								sprintf(msg, "%d", nState[nAddr]);

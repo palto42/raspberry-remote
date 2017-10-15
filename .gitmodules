@@ -1,0 +1,3 @@
+[submodule "rc-switch"]
+	path = rc-switch
+	url = https://github.com/palto42/rc-switch.git
