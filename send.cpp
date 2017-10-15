@@ -163,10 +163,10 @@ int main(int argc, char *argv[]) {
             systemCode = controlArgs[indexSystemCode];
             unitCode = controlArgs[indexUnitCode];
 
-            if (!silentMode) {
-                printf("sending systemCode[%s] unitCode[%s] command[%i]\n", systemCode, unitCode, command);
-            }
             if (binaryMode) {
+            	if (!silentMode) {
+                	printf("sending in binary mode systemCode[%s] unitCode[%s] command[%i]\n", systemCode, unitCode, command);
+           	 }
                 switch (command) {
                     case 1:
 /**
@@ -189,10 +189,14 @@ int main(int argc, char *argv[]) {
                         }
                 }
             } else if (decimalMode) {
-				mySwitch.setPulseLength(atoi(unitCode));
-				mySwitch.setProtocol(command);
-				mySwitch.send (atoi(systemCode),24);
-			} else {
+                        printf("sending in deciamal[%i] Pulse[%i] Protocol[%i]\n", atoi(systemCode), atoi(unitCode), command);
+			mySwitch.setProtocol(command,atoi(unitCode));
+			mySwitch.send (atoi(systemCode),24);
+	    } else {
+		if (!silentMode) {
+                        printf("sending in classic mode systemCode[%s] unitCode[%s] command[%i]\n", systemCode, unitCode, command);
+                 }
+
                 switch (command) {
                     case 1:
                         mySwitch.switchOn(systemCode, atoi(unitCode));
