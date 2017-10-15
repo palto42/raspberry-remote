@@ -447,16 +447,16 @@ int getDecimalZap(const char* nGroup, int nSwitchNumber, int nAction) {
 			group = group << 2 | 1;
 		}
 	}
-	int switchnr = 0b11 << (2*(nSwitchNumber+1)) | 0b01010100000000;
-//        printf("Group# %i, Switch# %i, Action %i\n", group, switchnr, nAction);
-	int result = (group << 14) | switchnr;
+	//int switchnr = 0b11 << (2*(nSwitchNumber+1)) | 0b01010100000000;
 	if (nAction == 0) { //OFF
-		result = result |  0b1100;
+		int switchnr = 0b01010100001100;
 	}
 	else if (nAction == 1) { //ON
-		result = result |  0b0011;
+		int switchnr = 0b01010100000011;
 	}
-	return result;
+	switchnr |= 0b11 << (2*(nSwitchNumber+1));
+	((int result = (group << 14) | switchnr;
+	return (group << 14) | switchnr;
 }
 
 /**
