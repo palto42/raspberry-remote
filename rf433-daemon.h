@@ -14,7 +14,7 @@ void getBin(int num, char *str);
 int getAddrElro(const char* nGroup, int nSwitchNumber);
 int getAddrInt(const char* nGroup, int nSwitchNumber);
 // add code for Zap/REV switches
-int getAddrZap(const char* nGroup, int nSwitchNumber);
+int getDecimalZap(const char* nGroup, int nSwitchNumber, int nAction);
 
 PI_THREAD(switchOn);
 PI_THREAD(switchOff);

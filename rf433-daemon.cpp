@@ -8,7 +8,7 @@
  *
  * Usage
  *   send axxxxxyyz to ip:port
- *   a		systemcode. 1 for classic elro, 2 for Intertechno 
+ *   a		systemcode. 1 for classic elro, 2 for Intertechno, 3 for Zap/Rev
  *   xxxxx  encoding
  *          00001 for first channel
  *   yy     plug
@@ -32,6 +32,9 @@
  *
  *   Switch intertechno plug 2 on group 2 to on
  *     echo 202021 | nc localhost 11337
+ * 
+ *   Switch Zap plug 5 on group 11000 to on
+ *     echo 311000051 | nc localhost 11337
  *
  */
 
@@ -43,7 +46,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#include "daemon.h"
+#include "rf433-daemon.h"
 #include "./rc-switch/RCSwitch.h"
 
 RCSwitch mySwitch;
@@ -318,10 +321,12 @@ int main(int argc, char* argv[]) {
 
 					/**
 					* handle messages
-					*/
+					* /
 					int nAddr = getDecimalZap(nGroup, nSwitchNumber, nAction);
 					printf("nAddr: %i\n", nAddr);
 					printf("nPlugs: %i\n", nPlugs);
+					*/
+					int nAddr = 357635; 
 					char msg[13];
 					if (nAddr > 5600524 || nAddr < 5424) {
 						printf("Switch out of range: %s:%d\n", nGroup, nSwitchNumber);
@@ -330,6 +335,7 @@ int main(int argc, char* argv[]) {
 					else {
 						mySwitch.setProtocol(1,188);
 						mySwitch.send (nAddr,24);
+						switch (nAction) {
 							//OFF
 							case 0:{
 								//piThreadCreate(switchOff);
@@ -431,23 +437,24 @@ int getAddrInt(const char* nGroup, int nSwitchNumber) {
 int getDecimalZap(const char* nGroup, int nSwitchNumber, int nAction) {
 	int group = 0;
 	for (int i = 0; i < 5; i++) {
-		if (nGroup[i] == "0") {
+		if (nGroup[i] == '0') {
 			group <<= 2;
 		}
-		else if nGroup[i] == "1") {
+		else if (nGroup[i] == '1') {
 			group = group << 2 | 1;
 		}
 		else { // "F" or any other character
 			group = group << 2 | 3;
 		}
-		int switchnr = 0b11 << 2*(nSwitchNumber+1) || 0b01010100000000;
-		int result = (group << 7) | nSwitchNumber;
-		if (nAction = 0) { //OFF
-			result = result |  0b1100;
-		}
-		else if (nAction = 1) { //ON
-			result = result |  0b0011;
-		}
+	}
+	int switchnr = 0b11 << 2*(nSwitchNumber+1) || 0b01010100000000;
+	int result = (group << 7) | nSwitchNumber;
+	if (nAction = 0) { //OFF
+		result = result |  0b1100;
+	}
+	else if (nAction = 1) { //ON
+		result = result |  0b0011;
+	}
 	return result;
 }
 
